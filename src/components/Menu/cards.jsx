@@ -1,0 +1,65 @@
+/* eslint-disable react/prop-types */
+import { useState } from "react";
+import { FaRegHeart } from "react-icons/fa";
+
+function Cards({ item, addToCart }) {
+  const [count, setCount] = useState(1); // State for count
+  const [showPrompt, setShowPrompt] = useState(false); // State for showing prompt
+
+  const handleAddToCart = () => {
+    if (item && item.name) {
+      // Ensure the item has a name
+      console.log(item);
+      addToCart({ ...item, count, item }); // Pass the item along with the count
+      setCount(1); // Reset count after adding to cart
+      setShowPrompt(true); // Show prompt
+      setTimeout(() => setShowPrompt(false), 2000); // Hide prompt after 2 seconds
+    } else {
+      console.error("Item does not have a valid name or data:", item);
+    }
+  };
+
+  return (
+    <div className="card bg-darkred text-center py-2 rounded-xl relative mt-10 mb-10">
+      {showPrompt && ( // Conditional rendering for prompt
+        <div className="prompt absolute right-0 top-0 bg-darkgreen text-white py-1 px-4 rounded-md transform translate-x-full z-10">
+          Added Successfully
+        </div>
+      )}
+      <FaRegHeart className="text-3xl right-0 absolute mr-2" />
+      <div className="img flex justify-center items-center mt-9">
+        <img
+          src={item.path}
+          alt={item.name}
+          className="w-52 h-52 overflow-hidden bg-transparent"
+        />
+      </div>
+      <div className="text mt-4 mb-4 px-3">
+        <h2 className="font-bold">{item.name}</h2>
+        <p className="text-sm">{item.description}</p>
+        <h2 className="font-bold">$ {item.price}</h2>
+      </div>
+      {/* Buttons for increasing and decreasing count */}
+      <div className="count-buttons hidden">
+        <button
+          className="count-button"
+          onClick={() => setCount(count > 0 ? count - 1 : 0)}
+        >
+          -
+        </button>
+        <span className="count">{count}</span>
+        <button className="count-button" onClick={() => setCount(count + 1)}>
+          +
+        </button>
+      </div>
+      <button
+        className="bg-darkgreen text-white py-2 px-4 rounded-lg absolute left-1/2 transform -translate-x-1/2 -bottom-5 font-bold"
+        onClick={handleAddToCart}
+      >
+        + Add Cart
+      </button>
+    </div>
+  );
+}
+
+export default Cards;
